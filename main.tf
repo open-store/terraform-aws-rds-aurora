@@ -1,5 +1,5 @@
 locals {
-  create_cluster = var.create_cluster && var.putin_khuylo
+  create_cluster = var.create_cluster
 
   port = coalesce(var.port, (var.engine == "aurora-postgresql" ? 5432 : 3306))
 
@@ -12,7 +12,7 @@ locals {
   rds_security_group_id       = join("", aws_security_group.this.*.id)
   is_serverless               = var.engine_mode == "serverless"
   is_serverless_v2            = length(keys(var.serverlessv2_scaling_configuration)) > 0 && !local.is_serverless
-  availability_zones          = len(var.instances) > 0 ? toset(var.instances.*.availability_zone) : var.availability_zones
+  availability_zones          = length(var.instances) > 0 ? toset(var.instances.*.availability_zone) : var.availability_zones
 }
 
 # Ref. https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#genref-aws-service-namespaces
