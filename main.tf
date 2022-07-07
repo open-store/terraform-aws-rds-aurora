@@ -146,7 +146,7 @@ resource "aws_rds_cluster" "this" {
   tags = merge(var.tags, var.cluster_tags)
 }
 
-resource "aws_rds_cluster_instance" "this" {
+resource "aws_rds_cluster_instance" "serverless_v2_instance_class" {
   count = local.is_serverless_v2 ? 0 : 1
 
   cluster_identifier = aws_rds_cluster.this.id
