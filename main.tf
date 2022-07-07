@@ -147,7 +147,7 @@ resource "aws_rds_cluster" "this" {
 }
 
 resource "aws_rds_cluster_instance" "serverless_v2_instance_class" {
-  count = loca.create_cluster && local.is_serverless_v2 ? 0 : 1
+  count = local.create_cluster && local.is_serverless_v2 ? 0 : 1
 
   cluster_identifier = aws_rds_cluster.this[0].id
   instance_class     = "db.serverless"
