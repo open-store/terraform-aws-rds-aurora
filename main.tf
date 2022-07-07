@@ -11,6 +11,7 @@ locals {
   rds_enhanced_monitoring_arn = var.create_monitoring_role ? join("", aws_iam_role.rds_enhanced_monitoring.*.arn) : var.monitoring_role_arn
   rds_security_group_id       = join("", aws_security_group.this.*.id)
   is_serverless               = var.engine_mode == "serverless"
+  is_serverless_v2            = length(keys(var.serverlessv2_scaling_configuration)) == 0 || local.is_serverless
 }
 
 # Ref. https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#genref-aws-service-namespaces
@@ -103,7 +104,7 @@ resource "aws_rds_cluster" "this" {
   }
 
   dynamic "serverlessv2_scaling_configuration" {
-    for_each = length(keys(var.serverlessv2_scaling_configuration)) == 0 || local.is_serverless ? [] : [var.serverlessv2_scaling_configuration]
+    for_each = local.is_serverless_v2 ? [] : [var.serverlessv2_scaling_configuration]
 
     content {
       max_capacity = serverlessv2_scaling_configuration.value.max_capacity
@@ -143,6 +144,15 @@ resource "aws_rds_cluster" "this" {
   }
 
   tags = merge(var.tags, var.cluster_tags)
+}
+
+resource "aws_rds_cluster_instance" "this" {
+  count = local.is_serverless_v2 ? 0 : 1
+
+  cluster_identifier = aws_rds_cluster.this.id
+  instance_class     = "db.serverless"
+  engine             = aws_rds_cluster.this.engine
+  engine_version     = aws_rds_cluster.this.engine_version
 }
 
 resource "aws_rds_cluster_instance" "this" {
