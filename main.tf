@@ -147,12 +147,12 @@ resource "aws_rds_cluster" "this" {
 }
 
 resource "aws_rds_cluster_instance" "serverless_v2_instance_class" {
-  count = local.is_serverless_v2 ? 0 : 1
+  count = loca.create_cluster && local.is_serverless_v2 ? 0 : 1
 
-  cluster_identifier = aws_rds_cluster.this.id
+  cluster_identifier = aws_rds_cluster.this[0].id
   instance_class     = "db.serverless"
-  engine             = aws_rds_cluster.this.engine
-  engine_version     = aws_rds_cluster.this.engine_version
+  engine             = aws_rds_cluster.this[0].engine
+  engine_version     = aws_rds_cluster.this[0].engine_version
 }
 
 resource "aws_rds_cluster_instance" "this" {
