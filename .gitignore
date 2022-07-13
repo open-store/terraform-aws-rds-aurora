@@ -30,3 +30,5 @@ terraform.rc
 
 # S3 import example
 backup
+
+*.swp
