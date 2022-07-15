@@ -156,6 +156,8 @@ resource "aws_rds_cluster_instance" "serverless_v2_instance_class" {
   engine             = aws_rds_cluster.this[0].engine
   engine_version     = aws_rds_cluster.this[0].engine_version
   availability_zone  = each.key
+
+  db_parameter_group_name = var.db_parameter_group_name
 }
 
 resource "aws_rds_cluster_instance" "this" {
