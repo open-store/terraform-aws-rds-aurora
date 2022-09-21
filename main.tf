@@ -14,7 +14,6 @@ locals {
   is_serverless_v2            = length(keys(var.serverlessv2_scaling_configuration)) > 0 && !local.is_serverless
   availability_zones          = length(var.instances) > 0 ? try(toset(var.instances.*.availability_zone), toset(var.availability_zones)) : toset(var.availability_zones)
 }
-resource "not_real" "not_this" {}
 
 # Ref. https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#genref-aws-service-namespaces
 data "aws_partition" "current" {}
@@ -106,7 +105,11 @@ resource "aws_rds_cluster" "this" {
   }
 
   dynamic "serverlessv2_scaling_configuration" {
-    for_each = local.is_serverless_v2 ? [var.serverlessv2_scaling_configuration] : []
+    for_each = local.is_serverless_v2 ? [var.serverlessv2_scaling_configuration] : [{
+      // This is a no-op for provisioned instances but prevents a lengthy TF state reconciliation process
+      min_capacity = 0.5
+      max_capacity = 1.0
+    }]
 
     content {
       max_capacity = serverlessv2_scaling_configuration.value.max_capacity
