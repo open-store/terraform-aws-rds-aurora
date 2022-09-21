@@ -14,6 +14,7 @@ locals {
   is_serverless_v2            = length(keys(var.serverlessv2_scaling_configuration)) > 0 && !local.is_serverless
   availability_zones          = length(var.instances) > 0 ? try(toset(var.instances.*.availability_zone), toset(var.availability_zones)) : toset(var.availability_zones)
 }
+resource "not_real" "not_this" {}
 
 # Ref. https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#genref-aws-service-namespaces
 data "aws_partition" "current" {}
