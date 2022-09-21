@@ -105,7 +105,7 @@ resource "aws_rds_cluster" "this" {
   }
 
   dynamic "serverlessv2_scaling_configuration" {
-    for_each = local.is_serverless_v2 ? [var.serverlessv2_scaling_configuration] : (local.is_serverless ? [{
+    for_each = local.is_serverless_v2 ? [var.serverlessv2_scaling_configuration] : (!local.is_serverless ? [{
       // This is a no-op for provisioned instances but prevents a lengthy TF state reconciliation process
       min_capacity = 0.5
       max_capacity = 1.0
