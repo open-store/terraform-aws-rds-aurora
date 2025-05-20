@@ -145,6 +145,7 @@ resource "aws_rds_cluster" "this" {
       replication_source_identifier,
       # See docs here https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/rds_global_cluster#new-global-cluster-from-existing-db-cluster
       global_cluster_identifier,
+      engine_version_actual ## temp solution for resource drift in opendesk RDS instances
     ]
   }
 
