@@ -32,3 +32,7 @@ terraform.rc
 backup
 
 *.swp
+
+# IDE
+.idea
+.vscode
